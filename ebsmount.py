@@ -13,6 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import subprocess
 import os
 from os.path import *
 
@@ -34,7 +35,7 @@ def ebsmount_add(devname, mountdir):
         devpath = join('/dev', device.name)
         mountpath = join(mountdir, device.env.get('ID_FS_UUID', devpath[-1])[:6])
         mountoptions = ",".join(config.mountoptions.split())
-        scriptpath = join(mountpath, ".ebsmount")
+        #scriptpath = join(mountpath, ".ebsmount")
 
         filesystem = device.env.get('ID_FS_TYPE', None)
         if not filesystem:
@@ -52,11 +53,9 @@ def ebsmount_add(devname, mountdir):
         mount(devpath, mountpath, mountoptions)
         log(devname, "mounted %s %s (%s)" % (devpath, mountpath, mountoptions))
 
-        if exists(scriptpath):
-            os.environ['HOME'] = pwd.getpwuid(os.getuid()).pw_dir
-            cmd = "/bin/bash --login -c 'export PATH; run-parts --verbose %s'" % scriptpath
-            cmd += " 2>&1 | tee -a %s" % config.logfile
-            system(cmd)
+	#hacking around
+        if exists(config.postmountscript):
+	    res = system("bash '%s'" % config.postmountscript)
 
 def ebsmount_remove(devname, mountdir):
     """ebs device detached"""
