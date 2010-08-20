@@ -55,7 +55,7 @@ def ebsmount_add(devname, mountdir):
 
 	#hacking around
         if exists(config.postmountscript):
-	    res = system("bash '%s'" % config.postmountscript)
+          res = system("python '%s'" % config.postmountscript)
 
 def ebsmount_remove(devname, mountdir):
     """ebs device detached"""
