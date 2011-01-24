@@ -1,0 +1,9 @@
+# udev rules to trigger ebsmount-udev on ebs attach|detach
+
+# Amazon EC2
+KERNEL=="sd[f-p]", SUBSYSTEM=="block", ATTRS{devtype}=="vbd", ACTION=="add", RUN+="/usr/local/bin/ebsmount-udev add"
+KERNEL=="sd[f-p]", SUBSYSTEM=="block", ACTION=="remove", RUN+="/usr/local/bin/ebsmount-udev remove"
+
+# Eucalyptus
+KERNEL=="vd[a-z]*", SUBSYSTEM=="block", ACTION=="add", RUN+="/usr/local/bin/ebsmount-udev add"
+KERNEL=="vd[a-z]*", SUBSYSTEM=="block", ACTION=="remove", RUN+="/usr/local/bin/ebsmount-udev remove"
