@@ -35,7 +35,6 @@ def ebsmount_add(devname, mountdir):
         devpath = join('/dev', device.name)
         mountpath = join(mountdir, device.env.get('ID_FS_UUID', devpath[-1])[:6])
         mountoptions = ",".join(config.mountoptions.split())
-        #scriptpath = join(mountpath, ".ebsmount")
 
         filesystem = device.env.get('ID_FS_TYPE', None)
         if not filesystem:
@@ -51,12 +50,9 @@ def ebsmount_add(devname, mountdir):
             continue
 
         mount(devpath, mountpath, mountoptions)
-        log(devname, "mounted %s %s (%s)" % (devpath, mountpath, mountoptions))
-
-        #hacking around
         if exists(config.postmountscript):
-          log(devname, "Executing: %s -m %s" % (config.postmountscript, mountpath))
-          res = system("exec '%s' -m %s" % (config.postmountscript, mountpath))
+          log(devname, "Executing: %s -m %s -d %s" % (config.postmountscript, mountpath, devname))
+          res = system("exec '%s' -m %s -d %s" % (config.postmountscript, mountpath, devname))
         else:
           log(devname, "Script does not exist at %s" % config.postmountscript)
 
