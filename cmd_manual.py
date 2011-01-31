@@ -48,7 +48,7 @@ def fatal(s):
 def _expected_devpath(devname, devpaths):
     """ugly hack to test expected structure of devpath"""
     raw_output = executil.getoutput('udevadm info -a -n %s' % devname)
-
+    
     for line in raw_output.splitlines():
         line = line.strip()
         for devpath in devpaths:
